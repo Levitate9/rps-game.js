@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" 
+    crossorigin="anonymous"
+  >
+  <style>
+    body {
+      height: 100vh;
+    }
+
+    #image-area,
+    #radio-area,
+    #buttons-area {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      height: 20vh;
+    }
+
+    #image-area {
+      height: 60vh;
+    }
+
+    #user-image,
+    #enemy-image {
+      width: 200px;
+      height: 200px;
+    }
+
+    #enemy-image {
+      transform: scale(-1, 1);
+      -webkit-transform: scale(-1, 1);
+      -ms-transform: scale(-1, 1);
+    }
+
+    .vs {
+      width: 20vw;
+    }
+
+    #info {
+      font-size: 50px;
+      font-weight: 700;
+      font-style: italic;
+      text-align: center;
+      color: rgba(196, 196, 196, 1);
+    }
+
+    .btn-primary {
+      margin: 7px;
+    }
+
+    .win {
+      color: rgba(0, 131, 0, 1) !important;
+    }
+
+    .lose {
+      color: rgba(255, 0, 0, 1) !important;
+    }
+
+    .tie {
+      color: rgba(255, 166, 0, 1) !important;
+    }
+
+  </style>
+</head>
+<body>
+  <section id="image-area">
+    <div class="user">
+      <img id="user-image" src="./images/rock.png">
+    </div>
+    <div class="vs">
+      <p id="info">vs</p>
+    </div>
+    <div class="enemy">
+      <img id="enemy-image" src="./images/default.png">
+    </div>
+  </section>
+  <section id="radio-area">
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+      <input type="radio" class="btn-check" name="btnradio" id="rock" autocomplete="off" checked 
+        onclick="changePick('rock')">
+      <label class="btn btn-outline-primary" for="rock">Rock</label>
+    
+      <input type="radio" class="btn-check" name="btnradio" id="scissors" autocomplete="off"
+        onclick="changePick('scissors')">
+      <label class="btn btn-outline-primary" for="scissors">Scissors</label>
+    
+      <input type="radio" class="btn-check" name="btnradio" id="papper" autocomplete="off"
+        onclick="changePick('papper')">
+      <label class="btn btn-outline-primary" for="papper">Papper</label>
+    </div>
+  </section>
+  <section id="buttons-area">
+    <div>
+      <button type="button" class="btn btn-primary" id="start" onclick="startGame(data, userPick)">Start</button>
+      <button type="button" class="btn btn-primary" id="reset" disabled onclick="resetGame()">Reset</button>
+    </div>
+  </section>
+  
+  <script>
+    let data = ['rock', 'scissors', 'papper']
+    let userPick = 'rock'
+    let info = document.getElementById('info')
+    let userImage = document.getElementById('user-image')
+    let enemyImage = document.getElementById('enemy-image')
+    let startButton = document.getElementById('start')
+    let resetButton = document.getElementById('reset')
+    let radio = Array.from(document.getElementsByClassName('btn-check'))
+    
+    const changePick = (value) => {
+      userImage.src=`./images/${value}.png`
+      userPick = value
+    }
+    
+    const startGame = (data, userPick) => {
+      let enemyPick = data[Math.floor(Math.random() * data.length)]
+
+      enemyImage.src=`./images/${enemyPick}.png`
+      radio.map((el) => el.setAttribute('disabled', 'disabled'))
+      startButton.setAttribute('disabled', 'disabled')
+      resetButton.removeAttribute('disabled')
+
+      if (userPick === enemyPick) {
+        info.innerHTML = 'Tie game'
+        info.classList.add('tie')
+      } else if (userPick === 'rock' && enemyPick === 'scissors') {
+        info.innerHTML = 'You win!'
+        info.classList.add('win')
+      } else if (userPick === 'rock' && enemyPick === 'papper') {
+        info.innerHTML = 'You lose'
+        info.classList.add('lose')
+      } else if (userPick === 'scissors' && enemyPick === 'rock') {
+        info.innerHTML = 'You lose'
+        info.classList.add('lose')
+      } else if (userPick === 'scissors' && enemyPick === 'papper') {
+        info.innerHTML = 'You win!'
+        info.classList.add('win')
+      } else if (userPick === 'papper' && enemyPick === 'rock') {
+        info.innerHTML = 'You win!'
+        info.classList.add('win')
+      } else if (userPick === 'papper' && enemyPick === 'scissors') {
+        info.innerHTML = 'You lose'
+        info.classList.add('lose')
+      } 
+    }
+
+    const resetGame = () => {
+      info.innerHTML = 'vs'
+      info.classList.remove('win', 'tie', 'lose')
+      enemyImage.src=`./images/default.png`
+      radio.map((el) => el.removeAttribute('disabled'))
+      startButton.removeAttribute('disabled')
+      resetButton.setAttribute('disabled', 'disabled')
+    }
+  </script>
+</body>
+</html>
+
